@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="api-testing-app">
+        <dropForeignKeyConstraint baseTableName="collection_item" constraintName="fk_collection_item_on_collection"/>
+    </changeSet>
+    <changeSet id="2" author="api-testing-app">
+        <dropForeignKeyConstraint baseTableName="collection_item" constraintName="fk_collection_item_on_parent_folder"/>
+    </changeSet>
+    <changeSet id="3" author="api-testing-app">
+        <addColumn tableName="COLLECTION_FOLDER">
+            <column name="SORT_ORDER" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="4" author="api-testing-app">
+        <addColumn tableName="REQUEST">
+            <column name="SORT_ORDER" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="5" author="api-testing-app">
+        <addColumn tableName="COLLECTION">
+            <column name="VERSION" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="6" author="api-testing-app">
+        <dropTable cascadeConstraints="true" tableName="collection_item"/>
+    </changeSet>
+    <changeSet id="7" author="api-testing-app">
+        <dropColumn columnName="order_index" tableName="collection_folder"/>
+    </changeSet>
+    <changeSet id="8" author="api-testing-app">
+        <dropColumn columnName="order_index" tableName="request"/>
+    </changeSet>
+    <changeSet id="9" author="api-testing-app">
+        <dropNotNullConstraint columnDataType="uuid" columnName="COLLECTION_ID" tableName="COLLECTION_FOLDER"/>
+    </changeSet>
+    <changeSet id="10" author="api-testing-app">
+        <modifyDataType columnName="NAME" newDataType="VARCHAR(255)" tableName="COLLECTION"/>
+    </changeSet>
+    <changeSet id="11" author="api-testing-app">
+        <dropNotNullConstraint columnDataType="varchar(255)" columnName="NAME" tableName="COLLECTION"/>
+    </changeSet>
+    <changeSet id="12" author="api-testing-app">
+        <dropNotNullConstraint columnDataType="varchar(255)" columnName="NAME" tableName="COLLECTION_FOLDER"/>
+    </changeSet>
+    <changeSet id="13" author="api-testing-app">
+        <modifyDataType columnName="NAME" newDataType="VARCHAR(255)" tableName="REQUEST"/>
+    </changeSet>
+    <changeSet id="14" author="api-testing-app">
+        <modifyDataType columnName="URL" newDataType="VARCHAR(255)" tableName="REQUEST"/>
+    </changeSet>
+    <changeSet id="15" author="api-testing-app">
+        <dropNotNullConstraint columnDataType="varchar(255)" columnName="URL" tableName="REQUEST"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://requestHistoryView.title">
+    <data>
+        <collection id="requestExecutionsDc"
+                    class="com.company.apitestingapp.entity.RequestExecution">
+            <loader id="requestExecutionsDl">
+                <query>
+                    <![CDATA[select e from RequestExecution e order by e.executedAt desc]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <layout expand="mainLayout">
+        <vbox id="mainLayout" classNames="history-view" spacing="false" width="100%" height="100%">
+
+            <hbox classNames="toolbar" width="100%" padding="true" alignItems="CENTER">
+                <h3 text="История запросов" classNames="view-title"/>
+                <div classNames="flex-grow"/>
+                <button id="exportHistoryBtn" themeNames="contrast" icon="DOWNLOAD">
+                    <tooltip text="Экспорт истории в HTML" position="BOTTOM"/>
+                </button>
+                <button id="refreshBtn" themeNames="tertiary" icon="REFRESH">
+                    <tooltip text="Обновить" position="BOTTOM"/>
+                </button>
+                <button id="clearHistoryBtn" themeNames="error" icon="TRASH">
+                    <tooltip text="Очистить историю" position="BOTTOM"/>
+                </button>
+            </hbox>
+
+            <vbox classNames="filters-panel" spacing="true" padding="true">
+                <hbox alignItems="END" spacing="true" width="100%">
+                    <textField id="searchField" placeholder="Поиск по URL, методу или ответу..." width="300px" clearButtonVisible="true"/>
+                    <comboBox id="methodFilter" placeholder="Метод" width="150px"/>
+                    <comboBox id="statusFilter" placeholder="Статус" width="150px"/>
+                    <datePicker id="dateFromFilter" label="С" width="150px"/>
+                    <datePicker id="dateToFilter" label="По" width="150px"/>
+                    <div classNames="flex-grow"/>
+                    <button id="repeatRequestBtn" themeNames="primary" icon="REPLY">
+                        <tooltip text="Повторить запрос" position="BOTTOM"/>
+                    </button>
+                </hbox>
+            </vbox>
+
+            <dataGrid id="historyGrid" dataContainer="requestExecutionsDc" classNames="history-grid" height="100%">
+                <columns>
+                    <column property="request.method" header="Метод" width="100px"/>
+                    <column property="request.url" header="URL" flexGrow="1"/>
+                    <column property="statusCode" header="Статус" width="120px"/>
+                    <column property="responseTimeMs" header="Время выполнения (мс)" width="100px"/>
+                    <column property="executedAt" header="Дата" width="180px"/>
+                </columns>
+            </dataGrid>
+        </vbox>
+    </layout>
+</view>

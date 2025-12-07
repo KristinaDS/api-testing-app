@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="api-testing-app">
+        <dropForeignKeyConstraint baseTableName="collection_folder" constraintName="fk_collection_folder_on_id"/>
+    </changeSet>
+    <changeSet id="2" author="api-testing-app">
+        <addColumn tableName="COLLECTION_FOLDER">
+            <column name="COLLECTION_ID" type="UUID"/>
+        </addColumn>
+
+        <addNotNullConstraint columnName="COLLECTION_ID" tableName="COLLECTION_FOLDER"/>
+    </changeSet>
+    <changeSet id="3" author="api-testing-app">
+        <addColumn tableName="COLLECTION_FOLDER">
+            <column name="DESCRIPTION" type="VARCHAR(255)"/>
+            <column name="ORDER_INDEX" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="4" author="api-testing-app">
+        <addColumn tableName="COLLECTION_ITEM">
+            <column name="DESCRIPTION" type="CLOB"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="5" author="api-testing-app">
+        <addColumn tableName="REQUEST">
+            <column name="FOLDER_ID" type="UUID"/>
+            <column name="ORDER_INDEX" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="6" author="api-testing-app">
+        <addColumn tableName="COLLECTION_FOLDER">
+            <column name="NAME" type="VARCHAR(255)"/>
+        </addColumn>
+
+        <addNotNullConstraint columnName="NAME" defaultNullValue="''" tableName="COLLECTION_FOLDER"/>
+    </changeSet>
+    <changeSet id="7" author="api-testing-app">
+        <addForeignKeyConstraint baseColumnNames="COLLECTION_ID" baseTableName="COLLECTION_FOLDER"
+                                 constraintName="FK_COLLECTION_FOLDER_ON_COLLECTION" referencedColumnNames="ID"
+                                 referencedTableName="COLLECTION"/>
+    </changeSet>
+    <changeSet id="8" author="api-testing-app">
+        <addForeignKeyConstraint baseColumnNames="FOLDER_ID" baseTableName="REQUEST"
+                                 constraintName="FK_REQUEST_ON_FOLDER" referencedColumnNames="ID"
+                                 referencedTableName="COLLECTION_FOLDER"/>
+    </changeSet>
+    <changeSet id="9" author="api-testing-app">
+        <dropColumn columnName="dtype" tableName="collection_item"/>
+
+        <dropColumn columnName="request_id" tableName="collection_item"/>
+    </changeSet>
+</databaseChangeLog>

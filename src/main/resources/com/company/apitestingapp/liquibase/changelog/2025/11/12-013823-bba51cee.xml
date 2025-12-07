@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="api-testing-app">
+        <createTable tableName="ASSERTION_RESULT">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ASSERTION_RESULT"/>
+            </column>
+            <column name="TEST_EXECUTION_RESULT_ID" type="UUID"/>
+            <column name="ASSERTION_NAME" type="VARCHAR(255)"/>
+            <column name="ASSERTION_TYPE" type="VARCHAR(255)"/>
+            <column name="EXPECTED_VALUE" type="CLOB"/>
+            <column name="ACTUAL_VALUE" type="CLOB"/>
+            <column name="PASSED" type="BOOLEAN"/>
+            <column name="ERROR_MESSAGE" type="CLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="api-testing-app">
+        <createTable tableName="TEST_EXECUTION">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TEST_EXECUTION"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="ENVIRONMENT_ID" type="UUID"/>
+            <column name="STATUS" type="VARCHAR(255)"/>
+            <column name="TOTAL_TESTS" type="INT"/>
+            <column name="PASSED_TESTS" type="INT"/>
+            <column name="FAILED_TESTS" type="INT"/>
+            <column name="EXECUTION_TIME" type="BIGINT"/>
+            <column name="CREATE_TS" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="3" author="api-testing-app">
+        <createTable tableName="TEST_EXECUTION_RESULT">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TEST_EXECUTION_RESULT"/>
+            </column>
+            <column name="TEST_EXECUTION_ID" type="UUID"/>
+            <column name="REQUEST_ID" type="UUID"/>
+            <column name="STATUS" type="VARCHAR(255)"/>
+            <column name="RESPONSE_STATUS" type="INT"/>
+            <column name="RESPONSE_BODY" type="CLOB"/>
+            <column name="RESPONSE_HEADERS" type="CLOB"/>
+            <column name="EXECUTION_TIME" type="BIGINT"/>
+            <column name="ERROR_MESSAGE" type="CLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="4" author="api-testing-app">
+        <addColumn tableName="ENVIRONMENT">
+            <column name="BASE_URL" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" type="CLOB"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="5" author="api-testing-app">
+        <addColumn tableName="ENVIRONMENT_VARIABLE">
+            <column name="IS_SECRET" type="BOOLEAN"/>
+            <column name="VALUE" type="CLOB"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="6" author="api-testing-app">
+        <addColumn tableName="ENVIRONMENT_VARIABLE">
+            <column name="NAME" type="VARCHAR(255)"/>
+        </addColumn>
+
+        <addNotNullConstraint columnName="NAME" defaultNullValue="''" tableName="ENVIRONMENT_VARIABLE"/>
+    </changeSet>
+    <changeSet id="7" author="api-testing-app">
+        <addForeignKeyConstraint baseColumnNames="TEST_EXECUTION_RESULT_ID" baseTableName="ASSERTION_RESULT"
+                                 constraintName="FK_ASSERTION_RESULT_ON_TEST_EXECUTION_RESULT"
+                                 referencedColumnNames="ID" referencedTableName="TEST_EXECUTION_RESULT"/>
+    </changeSet>
+    <changeSet id="8" author="api-testing-app">
+        <addForeignKeyConstraint baseColumnNames="ENVIRONMENT_ID" baseTableName="TEST_EXECUTION"
+                                 constraintName="FK_TEST_EXECUTION_ON_ENVIRONMENT" referencedColumnNames="ID"
+                                 referencedTableName="ENVIRONMENT"/>
+    </changeSet>
+    <changeSet id="9" author="api-testing-app">
+        <addForeignKeyConstraint baseColumnNames="REQUEST_ID" baseTableName="TEST_EXECUTION_RESULT"
+                                 constraintName="FK_TEST_EXECUTION_RESULT_ON_REQUEST" referencedColumnNames="ID"
+                                 referencedTableName="REQUEST"/>
+    </changeSet>
+    <changeSet id="10" author="api-testing-app">
+        <addForeignKeyConstraint baseColumnNames="TEST_EXECUTION_ID" baseTableName="TEST_EXECUTION_RESULT"
+                                 constraintName="FK_TEST_EXECUTION_RESULT_ON_TEST_EXECUTION" referencedColumnNames="ID"
+                                 referencedTableName="TEST_EXECUTION"/>
+    </changeSet>
+    <changeSet id="11" author="api-testing-app">
+        <dropColumn columnName="key_" tableName="environment_variable"/>
+
+        <dropColumn columnName="value_" tableName="environment_variable"/>
+    </changeSet>
+    <changeSet id="12" author="api-testing-app">
+        <modifyDataType columnName="NAME" newDataType="VARCHAR(255)" tableName="ENVIRONMENT"/>
+    </changeSet>
+</databaseChangeLog>

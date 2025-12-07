@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="api-testing-app">
+        <createTable tableName="COLLECTION">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COLLECTION"/>
+            </column>
+            <column name="NAME" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="CLOB"/>
+            <column name="PARENT_COLLECTION_ID" type="UUID"/>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="DATETIME"/>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="api-testing-app">
+        <createTable tableName="COLLECTION_ITEM">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COLLECTION_ITEM"/>
+            </column>
+            <column name="NAME" type="CLOB"/>
+            <column name="ORDER_INDEX" type="INT"/>
+            <column name="COLLECTION_ID" type="UUID"/>
+            <column name="REQUEST_ID" type="UUID"/>
+            <column name="PRE_REQUEST_SCRIPT" type="CLOB"/>
+            <column name="TESTS" type="CLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="3" author="api-testing-app">
+        <createTable tableName="ENVIRONMENT">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ENVIRONMENT"/>
+            </column>
+            <column name="NAME" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IS_ACTIVE" type="BOOLEAN"/>
+            <column name="VARIABLES" type="CLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="4" author="api-testing-app">
+        <createTable tableName="REQUEST">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_REQUEST"/>
+            </column>
+            <column name="NAME" type="CLOB"/>
+            <column name="URL" type="VARCHAR(2000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="HEADERS" type="CLOB"/>
+            <column name="QUERY_PARAMS" type="CLOB"/>
+            <column name="BODY" type="CLOB"/>
+            <column name="DESCRIPTION" type="CLOB"/>
+            <column name="METHOD" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BODY_TYPE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="5" author="api-testing-app">
+        <createTable tableName="REQUEST_EXECUTION">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_REQUEST_EXECUTION"/>
+            </column>
+            <column name="RESPONSE_BODY" type="CLOB"/>
+            <column name="RESPONSE_HEADERS" type="CLOB"/>
+            <column name="RESPONSE_TIME_MS" type="BIGINT"/>
+            <column name="EXECUTED_AT" type="${offsetDateTime.type}"/>
+            <column name="SIZE_BYTES" type="BIGINT"/>
+            <column name="ERROR_MESSAGE" type="CLOB"/>
+            <column name="IS_SUCCESS" type="BOOLEAN"/>
+            <column name="STATUS_CODE" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="6" author="api-testing-app">
+        <createIndex indexName="IDX_COLLECTION_ITEM_COLLECTION" tableName="COLLECTION_ITEM">
+            <column name="COLLECTION_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="COLLECTION_ID" baseTableName="COLLECTION_ITEM"
+                                 constraintName="FK_COLLECTION_ITEM_ON_COLLECTION" referencedColumnNames="ID"
+                                 referencedTableName="COLLECTION"/>
+    </changeSet>
+    <changeSet id="7" author="api-testing-app">
+        <createIndex indexName="IDX_COLLECTION_ITEM_REQUEST" tableName="COLLECTION_ITEM">
+            <column name="REQUEST_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="REQUEST_ID" baseTableName="COLLECTION_ITEM"
+                                 constraintName="FK_COLLECTION_ITEM_ON_REQUEST" referencedColumnNames="ID"
+                                 referencedTableName="REQUEST"/>
+    </changeSet>
+    <changeSet id="8" author="api-testing-app">
+        <addForeignKeyConstraint baseColumnNames="PARENT_COLLECTION_ID" baseTableName="COLLECTION"
+                                 constraintName="FK_COLLECTION_ON_PARENT_COLLECTION" referencedColumnNames="ID"
+                                 referencedTableName="COLLECTION"/>
+    </changeSet>
+</databaseChangeLog>

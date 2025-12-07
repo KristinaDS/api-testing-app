@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://collectionsView.title">
+    <data>
+        <collection id="collectionsDc"
+                    class="com.company.apitestingapp.entity.Collection">
+            <loader id="collectionsDl">
+                <query>
+                    <![CDATA[select c from Collection c order by c.name]]>
+                </query>
+            </loader>
+        </collection>
+
+        <collection id="foldersDc" class="com.company.apitestingapp.entity.CollectionFolder">
+            <loader id="foldersDl">
+                <query><![CDATA[select f from CollectionFolder f where f.collection = :collection and f.parentFolder is null order by f.name]]></query>
+            </loader>
+        </collection>
+
+        <collection id="requestsDc" class="com.company.apitestingapp.entity.Request">
+            <loader id="requestsDl">
+                <query>
+                    <![CDATA[select r from Request r
+                        where ( :folder is not null and r.folder = :folder )
+                            or
+                            ( :folder is null and :collection is not null and r.collection = :collection and r.folder is null ) order by r.name]]>
+                </query>
+            </loader>
+        </collection>
+
+        <instance id="selectedCollectionDc" class="com.company.apitestingapp.entity.Collection"/>
+        <instance id="selectedFolderDc" class="com.company.apitestingapp.entity.CollectionFolder"/>
+    </data>
+
+    <layout spacing="true" padding="true">
+        <hbox width="100%" spacing="true" alignItems="END">
+<!--            <textField id="searchField" placeholder="Поиск коллекций..." width="300px"/>-->
+            <div classNames="flex-grow"/>
+            <button id="createCollectionBtn" text="Создать коллекцию" themeNames="primary" icon="PLUS"/>
+            <upload id="importFileUpload"
+                    maxFileSize="10485760" uploadText="Загрузить файл"
+                    acceptedFileTypes=".json" maxFiles="1" receiverType="MEMORY_BUFFER"/>
+<!--            <button id="importCollectionBtn" text="Импорт JSON" themeNames="success" icon="UPLOAD"/>-->
+            <button id="exportCollectionBtn" text="Экспорт выбранной" themeNames="contrast" icon="DOWNLOAD"/>
+        </hbox>
+
+        <hbox width="100%" spacing="true" height="100%" classNames="bordered-panel">
+            <vbox width="30%" height="100%" spacing="true" classNames="panel bordered">
+                <h3 text="Коллекции"/>
+                <dataGrid id="collectionsTable" dataContainer="collectionsDc" width="100%" height="100%">
+                    <columns>
+                        <column property="name" header="Название" resizable="true" flexGrow="1"/>
+                        <column property="description" header="Описание" resizable="true" flexGrow="2"/>
+                    </columns>
+                </dataGrid>
+                <hbox spacing="true">
+                    <button id="createCollectionBtn2" text="Добавить" themeNames="primary" visible="false"/>
+                    <button id="deleteCollectionBtn" icon="TRASH" themeNames="error" enabled="false">
+                        <tooltip text="Удалить"/>
+                    </button>
+                    <button id="runCollectionBtn" text="Запустить" themeNames="success" enabled="false"/>
+                </hbox>
+            </vbox>
+
+            <!-- Таблица папок -->
+            <vbox width="30%" height="100%" spacing="true" classNames="panel bordered">
+                <h3 text="Папки"/>
+                <dataGrid id="foldersTable" dataContainer="foldersDc" width="100%" height="100%">
+                    <columns>
+                        <column property="name" header="Название" resizable="true" flexGrow="1"/>
+                        <column property="description" header="Описание" resizable="true" flexGrow="2"/>
+                    </columns>
+                </dataGrid>
+                <hbox spacing="true">
+                    <button id="addFolderBtn" text="Добавить папку" themeNames="primary" enabled="false"/>
+                    <button id="addSubFolderBtn" text="Подпапка" themeNames="success" enabled="false" visible="false"/>
+                    <button id="deleteFolderBtn" icon="TRASH" themeNames="error" enabled="false">
+                        <tooltip text="Удалить папку"/>
+                    </button>
+                </hbox>
+            </vbox>
+
+            <!-- Таблица запросов -->
+            <vbox width="40%" height="100%" spacing="true" classNames="panel bordered">
+                <h3 text="Запросы"/>
+                <dataGrid id="requestsTable" dataContainer="requestsDc" width="100%" height="100%">
+                    <columns>
+                        <column property="name" header="Название" resizable="true" flexGrow="1"/>
+                        <column property="method" header="Метод" width="80px"/>
+                        <column property="url" header="URL" resizable="true" flexGrow="2"/>
+                    </columns>
+                </dataGrid>
+                <hbox spacing="true">
+                    <button id="addRequestBtn" text="Добавить запрос" themeNames="primary" enabled="false"/>
+<!--                    <button id="editRequestBtn" icon="PENCIL" themeNames="secondary" enabled="false">-->
+<!--                        <tooltip text="Редактировать"/>-->
+<!--                    </button>-->
+<!--                    <button id="runRequestBtn" icon="REPLY" themeNames="success" enabled="false">-->
+<!--                        <tooltip text="Запустить"/>-->
+<!--                    </button>-->
+                    <button id="deleteRequestBtn" icon="TRASH" themeNames="error" enabled="false">
+                        <tooltip text="Удалить запрос"/>
+                    </button>
+                </hbox>
+            </vbox>
+        </hbox>
+    </layout>
+</view>

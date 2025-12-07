@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://requestBuilderView.title">
+    <data>
+        <instance id="requestDc" class="com.company.apitestingapp.entity.Request">
+            <loader/>
+        </instance>
+        <collection id="headersDc" class="com.company.apitestingapp.entity.Header"/>
+        <collection id="queryParamsDc" class="com.company.apitestingapp.entity.QueryParameter"/>
+        <collection id="collectionsDc" class="com.company.apitestingapp.entity.Collection">
+            <loader>
+                <query>
+                    <![CDATA[select e from Collection e order by e.name]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+
+    <layout>
+        <vbox classNames="request-builder-view" spacing="false" height="100%" width="100%">
+            <hbox classNames="toolbar" width="100%" alignItems="CENTER">
+                <h3 text="Конструктор запросов" classNames="view-title"/>
+                <div classNames="flex-grow"/>
+                <button id="saveRequestBtn" text="Сохранить в коллекцию" themeNames="contrast" icon="FOLDER"/>
+                <button id="clearBtn" themeNames="tertiary" icon="ERASER">
+                    <tooltip text="Очистить" position="TOP"/>
+                </button>
+            </hbox>
+
+            <hbox classNames="main-content" width="100%" height="100%" spacing="false">
+
+                <vbox classNames="request-panel" spacing="false" height="100%" width="100%">
+                    <hbox classNames="url-input-row" alignItems="BASELINE" spacing="true" width="100%" padding="true">
+                        <comboBox id="methodComboBox" label="Метод" classNames="method-selector" dataContainer="requestDc" property="method"/>
+                        <textField id="urlField" label="URL" placeholder="https://api.example.com/users" classNames="url-input" width="270px" dataContainer="requestDc" property="url"/>
+                        <button id="sendBtn" text="Отправить" themeNames="primary" icon="PAPERPLANE" classNames="send-button"/>
+                    </hbox>
+
+                    <tabSheet id="requestTabs" classNames="request-tabs" height="100%" width="100%">
+                        <tab id="paramsTab" label="Параметры">
+                            <vbox height="100%" width="100%" spacing="false">
+                                <hbox spacing="true" padding="true" width="100%">
+                                    <textField id="newParamKey" placeholder="Ключ" width="30%"/>
+                                    <textField id="newParamValue" placeholder="Значение" width="60%"/>
+                                </hbox>
+                                <dataGrid id="queryParamsTable" dataContainer="queryParamsDc" width="100%" height="100%">
+                                    <columns>
+                                        <column property="key" resizable="true" width="40%" header="Ключ"/>
+                                        <column property="value" resizable="true" width="60%" header="Значение"/>
+                                    </columns>
+                                    <actions>
+                                        <action id="create" type="list_create"/>
+                                        <action id="remove" type="list_remove"/>
+                                        <action id="edit" type="list_edit"/>
+                                    </actions>
+                                </dataGrid>
+                                <hbox classNames="toolbar" padding="true">
+                                    <button id="addParamBtn" action="queryParamsTable.create" themeNames="success" icon="PLUS">
+                                        <tooltip text="Добавить параметр" position="TOP"/>
+                                    </button>
+                                    <button id="removeParamBtn" action="queryParamsTable.remove" themeNames="error" icon="MINUS">
+                                        <tooltip text="Удалить параметр" position="TOP"/>
+                                    </button>
+                                </hbox>
+                            </vbox>
+                        </tab>
+                        <tab id="headersTab" label="Заголовки">
+                            <vbox height="100%" width="100%" spacing="false">
+                                <hbox spacing="true" padding="true" width="100%">
+                                    <textField id="newHeaderKey" placeholder="Ключ" width="30%"/>
+                                    <textField id="newHeaderValue" placeholder="Значение" width="60%"/>
+                                </hbox>
+                                <dataGrid id="headersTable" dataContainer="headersDc" width="100%" height="100%" editorBuffered="true" columnReorderingAllowed="true">
+                                    <columns>
+                                        <column property="key" resizable="true" width="40%" header="Ключ"/>
+                                        <column property="value" resizable="true" width="60%" header="Значение"/>
+                                    </columns>
+                                    <actions>
+                                        <action id="create" type="list_create"/>
+                                        <action id="remove" type="list_remove"/>
+                                        <action id="edit" type="list_edit"/>
+                                    </actions>
+                                </dataGrid>
+                                <hbox classNames="toolbar" padding="true">
+                                    <button id="addHeaderBtn" action="headersTable.create" themeNames="success" icon="PLUS">
+                                        <tooltip text="Добавить заголовок" position="TOP"/>
+                                    </button>
+                                    <button id="removeHeaderBtn" action="headersTable.remove" themeNames="error" icon="MINUS">
+                                        <tooltip text="Удалить" position="TOP"/>
+                                    </button>
+                                </hbox>
+                            </vbox>
+                        </tab>
+                        <tab id="bodyTab" label="Тело">
+                            <vbox height="100%" width="100%" spacing="true">
+                                <comboBox id="bodyTypeComboBox" label="Тип тела" width="50%" classNames="body-type-selector" dataContainer="requestDc" property="bodyType"/>
+                                <textArea id="requestBodyArea" height="100%" width="100%" placeholder="Введите тело запроса (JSON, XML, текст)..." classNames="body-textarea" alignSelf="CENTER" dataContainer="requestDc" property="body"/>
+                            </vbox>
+                        </tab>
+                    </tabSheet>
+                </vbox>
+
+                <vbox classNames="response-panel" spacing="false" height="100%" width="100%">
+                    <hbox classNames="response-status-bar" alignItems="CENTER" spacing="true" width="100%" height="75px">
+                        <span id="statusLabel" classNames="status-badge waiting" text="Ожидание запроса..."/>
+                        <span id="timeLabel" classNames="response-stat" text="-"/>
+                        <span id="sizeLabel" classNames="response-stat" text="-"/>
+                        <div classNames="flex-spacer"/>
+                        <button id="copyResponseBtn" themeNames="tertiary" icon="COPY" ariaLabel="Копировать ответ">
+                                <tooltip text="Копировать ответ" position="TOP"/>
+                        </button>
+                        <button id="saveResponseBtn" themeNames="tertiary" icon="DOWNLOAD" ariaLabel="Сохранить ответ">
+                            <tooltip text="Сохранить ответ" position="TOP"/>
+                        </button>
+                    </hbox>
+
+                    <tabSheet id="responseTabs" classNames="response-tabs" height="100%" width="100%">
+                        <tab id="responseBodyTab" label="Тело">
+                            <textArea id="responseBodyArea" height="90%" width="99%" placeholder="Ответ появится здесь..." readOnly="true" classNames="response-body-textarea" alignSelf="CENTER"/>
+                        </tab>
+                        <tab id="responseHeadersTab" label="Заголовки">
+                            <textArea id="responseHeadersArea" height="90%" width="99%" placeholder="Заголовки ответа..." readOnly="true" classNames="response-headers-textarea" alignSelf="CENTER"/>
+                        </tab>
+                    </tabSheet>
+                </vbox>
+
+            </hbox>
+        </vbox>
+    </layout>
+</view>

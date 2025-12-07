@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="Test Runner">
+
+    <data>
+        <!-- Коллекции для выбора -->
+        <collection id="collectionsDc"
+                    class="com.company.apitestingapp.entity.Collection">
+            <loader id="collectionsDl">
+                <query>
+                    <![CDATA[select c from Collection c order by c.name]]>
+                </query>
+            </loader>
+        </collection>
+
+        <!-- История запусков тестов -->
+        <collection id="testExecutionsDc"
+                    class="com.company.apitestingapp.entity.TestExecution">
+            <loader id="testExecutionsDl">
+                <query>
+                    <![CDATA[select te from TestExecution te order by te.createTs desc]]>
+                </query>
+            </loader>
+        </collection>
+
+        <!-- Результаты выполнения конкретного теста -->
+        <collection id="executionResultsDc"
+                    class="com.company.apitestingapp.entity.TestExecutionResult">
+            <loader id="executionResultsDl">
+                <query>
+                    <![CDATA[select ter from TestExecutionResult ter where ter.testExecution.id = :testExecutionId]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+
+    <layout>
+        <vbox classNames="test-runner-layout" spacing="false">
+            <!-- Выбор коллекции -->
+            <vbox id="collectionSection" classNames="collection-section" width="100%">
+                <h3>Выбор коллекции для тестирования</h3>
+
+                <comboBox id="collectionComboBox"
+                          label="Коллекция"
+                          dataContainer="collectionsDc"
+                          property="name"
+                          width="100%">
+                </comboBox>
+
+                <button id="runTestsBtn"
+                        text="Запустить тесты"
+                        themeNames="primary success"
+                        width="200px"
+                        classNames="run-tests-btn">
+                </button>
+            </vbox>
+
+            <!-- Статус выполнения -->
+            <vbox id="executionStatusBox" visible="false" classNames="status-section" width="100%">
+                <h4>Выполнение тестов...</h4>
+                <progressBar id="executionProgress" indeterminate="true"/>
+            </vbox>
+
+            <!-- Результаты выполнения -->
+            <vbox id="resultsSection" width="100%" classNames="results-section">
+                <h3>История запусков</h3>
+
+                <dataGrid id="testExecutionsGrid"
+                          dataContainer="testExecutionsDc"
+                          width="100%"
+                          height="300px">
+                    <columns>
+                        <column property="name" flexGrow="1" header="Название запуска"/>
+                        <column property="status" width="120px" header="Статус"/>
+                        <column property="passedTests" width="100px" header="Успешно"/>
+                        <column property="failedTests" width="100px" header="Ошибки"/>
+                        <column property="executionTime" width="120px" header="Время (мс)"/>
+                        <column property="createTs" width="200px" header="Дата запуска"/>
+                    </columns>
+                </dataGrid>
+
+                <!-- Детали выбранного запуска -->
+                <vbox id="executionDetails" visible="false" width="100%" classNames="execution-details">
+                    <h4>Детали выполнения</h4>
+
+                    <dataGrid id="executionResultsGrid"
+                              dataContainer="executionResultsDc"
+                              width="100%"
+                              height="300px">
+                        <columns>
+                            <column property="request.name" flexGrow="1" header="Запрос"/>
+                            <column property="status" width="100px" header="Статус"/>
+                            <column property="responseStatus" width="120px" header="HTTP Статус"/>
+                            <column property="executionTime" width="120px" header="Время (мс)"/>
+                            <column property="errorMessage" flexGrow="2" header="Ошибка"/>
+                        </columns>
+                    </dataGrid>
+                </vbox>
+            </vbox>
+        </vbox>
+    </layout>
+</view>

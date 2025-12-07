@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<mainView xmlns="http://jmix.io/schema/flowui/main-view"
+          title="msg://MainView.title">
+    <actions>
+        <action id="logoutAction" type="logout"/>
+    </actions>
+    <appLayout>
+        <navigationBar>
+            <header id="header" classNames="jmix-main-view-header" >
+                <drawerToggle id="drawerToggle"
+                              classNames="jmix-main-view-drawer-toggle"
+                              themeNames="contrast"
+                              ariaLabel="msg://drawerToggle.ariaLabel"/>
+                <hbox classNames="header-actions" spacing="true">
+                    <!--<h1 id="viewTitle" classNames="jmix-main-view-title" text="Testing API"/>-->
+                    <hbox id="buttons" alignItems="END">
+                        <button id="collectionsBtn" text="Коллекции" themeNames="tertiary"/>
+                        <button id="historyBtn" text="История" themeNames="tertiary"/>
+                        <button id="settingsBtn" themeNames="tertiary" icon="COG">
+                            <tooltip text="Настройки" position="BOTTOM"/>
+                        </button>
+                        <button id="helpBtn" themeNames="tertiary" icon="QUESTION">
+                            <tooltip text="Справка" position="BOTTOM"/>
+                        </button>
+                    </hbox>
+                </hbox>
+            </header>
+        </navigationBar>
+
+        <drawerLayout>
+            <section id="section" classNames="jmix-main-view-section">
+                <h2 id="applicationTitle"
+                    classNames="jmix-main-view-application-title">
+                    <anchor id="baseLink"
+                            href="."
+                            text="msg://navigation.ariaLabel"
+                            classNames="jmix-main-view-application-title-base-link"/>
+                </h2>
+                <nav id="navigation"
+                     classNames="jmix-main-view-navigation"
+                     ariaLabel="msg://navigation.ariaLabel">
+                    <listMenu id="menu"/>
+                </nav>
+                <footer id="footer" classNames="jmix-main-view-footer">
+                    <vbox classNames="footer-content">
+                        <div classNames="user-info">
+                            <userIndicator id="userIndicatorFooter" classNames="user-indicator-footer"/>
+                        </div>
+                        <button id="logoutButton" action="logoutAction" icon="SIGN_OUT" classNames="logout-button">
+                            <tooltip text="Выйти" position="TOP"/>
+                        </button>
+                    </vbox>
+                </footer>
+            </section>
+        </drawerLayout>
+
+        <initialLayout>
+            <vbox classNames="main-content" spacing="false" alignItems="CENTER">
+                <div classNames="content-placeholder">
+                    <vbox classNames="welcome-message" alignItems="CENTER">
+                        <icon icon="CODE" size="64px" classNames="welcome-icon"/>
+                        <h2 text="Добро пожаловать в Testing API"/>
+                        <span text="Выберите раздел в меню для начала работы" classNames="welcome-subtitle"/>
+                        <hbox classNames="quick-actions">
+                            <button id="quickNewRequest"
+                                    text="Новый запрос"
+                                    themeNames="primary"
+                                    icon="PLUS"/>
+                            <button id="quickImport"
+                                    text="Импорт коллекции"
+                                    themeNames="secondary"
+                                    icon="UPLOAD" visible="false"/>
+                            <button id="quickTestRunner"
+                                    text="Тестовые сценарии"
+                                    themeNames="secondary"/>
+                        </hbox>
+                    </vbox>
+                </div>
+            </vbox>
+        </initialLayout>
+    </appLayout>
+</mainView>

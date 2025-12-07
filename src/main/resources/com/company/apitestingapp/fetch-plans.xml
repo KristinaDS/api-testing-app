@@ -1,0 +1,9 @@
+<fetchPlans xmlns="http://jmix.io/schema/core/fetch-plans">
+
+    <fetchPlan entity="Request" name="request-with-details" extends="_base">
+        <property name="headers" fetchPlan="_base"/>
+        <property name="queryParams" fetchPlan="_base"/>
+        <property name="collection" fetchPlan="_base"/>
+        <property name="folder" fetchPlan="_base"/>
+    </fetchPlan>
+</fetchPlans>

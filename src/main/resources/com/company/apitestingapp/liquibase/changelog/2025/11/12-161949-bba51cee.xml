@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="api-testing-app">
+        <dropForeignKeyConstraint baseTableName="environment_variable"
+                                  constraintName="fk_environment_variable_on_environment"/>
+    </changeSet>
+    <changeSet id="2" author="api-testing-app">
+        <dropTable cascadeConstraints="true" tableName="environment"/>
+    </changeSet>
+    <changeSet id="3" author="api-testing-app">
+        <dropTable cascadeConstraints="true" tableName="environment_variable"/>
+    </changeSet>
+    <changeSet id="4" author="api-testing-app">
+        <dropColumn columnName="environment_id" tableName="request"/>
+    </changeSet>
+    <changeSet id="5" author="api-testing-app">
+        <dropColumn columnName="environment_id" tableName="test_execution"/>
+    </changeSet>
+</databaseChangeLog>
